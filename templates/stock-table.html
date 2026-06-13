@@ -1,0 +1,99 @@
+// Stock Table Template
+const StockTableTemplate = `
+<div>
+    <div class="filters">
+        <div class="filter-group">
+            <div class="filter-item">
+                <label>Filter UT-Daerah</label>
+                <select v-model="filterUpbjj">
+                    <option value="">Semua</option>
+                    <option v-for="upbjj in upbjjList" :key="upbjj" :value="upbjj">
+                        {{ upbjj }}
+                    </option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label>Filter Kategori</label>
+                <select v-model="filterKategori">
+                    <option value="">Semua</option>
+                    <option v-for="kategori in kategoriList" :key="kategori" :value="kategori">
+                        {{ kategori }}
+                    </option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label>Filter Qty Min</label>
+                <input type="number" v-model.number="filterQtyMin" placeholder="Min quantity">
+            </div>
+            <div class="filter-item">
+                <label>Filter Qty Max</label>
+                <input type="number" v-model.number="filterQtyMax" placeholder="Max quantity">
+            </div>
+        </div>
+        <div class="filter-group">
+            <div class="filter-item">
+                <label>Filter Safety Min</label>
+                <input type="number" v-model.number="filterSafetyMin" placeholder="Min safety">
+            </div>
+            <div class="filter-item">
+                <label>Filter Safety Max</label>
+                <input type="number" v-model.number="filterSafetyMax" placeholder="Max safety">
+            </div>
+            <div class="filter-item">
+                <label>Sort By</label>
+                <select v-model="sortBy">
+                    <option value="">Tidak ada</option>
+                    <option value="judul">Judul (A-Z)</option>
+                    <option value="qty">Qty (kecil-besar)</option>
+                    <option value="harga">Harga (murah-mahal)</option>
+                </select>
+            </div>
+        </div>
+        <div class="filter-buttons">
+            <button class="btn btn-secondary" @click="resetFilters">Reset Filter</button>
+            <button class="btn btn-primary" @click="$emit('openAddModal')">+ Tambah Stok</button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table v-if="filteredStok.length > 0">
+            <thead>
+                <tr>
+                    <th>Kode</th>
+                    <th>Judul</th>
+                    <th>Kategori</th>
+                    <th>UT-Daerah</th>
+                    <th>Lokasi Rak</th>
+                    <th>Harga</th>
+                    <th>Qty</th>
+                    <th>Safety</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in filteredStok" :key="item.kode">
+                    <td>{{ item.kode }}</td>
+                    <td>{{ item.judul }}</td>
+                    <td><span class="text-kategori">{{ item.kategori }}</span></td>
+                    <td><span class="text-upbjj">{{ item.upbjj }}</span></td>
+                    <td>{{ item.lokasiRak }}</td>
+                    <td><span class="text-harga">{{ formatCurrency(item.harga) }}</span></td>
+                    <td>{{ item.qty }} buah</td>
+                    <td>{{ item.safety }} buah</td>
+                    <td>
+                        <status-badge :qty="item.qty" :safety="item.safety"></status-badge>
+                    </td>
+                    <td>
+                        <button class="btn btn-edit" @click="$emit('editItem', item)">Edit</button>
+                        <button class="btn btn-danger" @click="$emit('deleteItem', item.kode)">Hapus</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div v-else class="empty-state">
+            <p>Tidak ada data yang sesuai dengan filter</p>
+        </div>
+    </div>
+</div>
+`;
